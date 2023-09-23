@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7.0.10-alpine
+
+  django:
+    container_name: djCelery
+    build:
+      context: ./djCelery
+    command:
+      - sh
+      - -c
+      - |
+        python manage.py migrate
+        python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./djCelery:/usr/src/app
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=django-insecure-g(c(u_8fj^s+af*xdkhpr1+a3r_jxxx5jp#jiip79!$4q3g5lw
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+    depends_on:
+      - redis
+
+  celery:
+    container_name: celery
+    build:
+      context: ./djCelery
+    command: celery --app=djCelery worker -l INFO -Q queue1
+    volumes:
+      - ./djCelery:/usr/src/app
+    environment:
+      - SECRET_KEY=django-insecure-g(c(u_8fj^s+af*xdkhpr1+a3r_jxxx5jp#jiip79!$4q3g5lw
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+    depends_on:
+      - redis

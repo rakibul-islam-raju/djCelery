@@ -1,0 +1,4 @@
+0. Prepare docker_compose
+1. Configure redis with celery (setings.py)
+2. Create celery.py and update __init__.py
+3. Create tasks inside django_app
