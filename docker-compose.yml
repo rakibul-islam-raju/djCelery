@@ -29,7 +29,7 @@ services:
     container_name: celery
     build:
       context: ./djCelery
-    command: celery --app=djCelery worker -l INFO -Q celery,celery:1,celery:2,celery:3
+    command: celery --app=djCelery worker -l INFO -Q tasks
     volumes:
       - ./djCelery:/usr/src/app/
     environment:
